@@ -52,3 +52,60 @@
 .error-code{font-size:clamp(6rem,22vw,13rem);font-weight:900;line-height:.85;background:var(--gradient-1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .error-page h1{margin:2rem 0 1rem;font-size:clamp(2rem,6vw,3.5rem)}
 .error-page p{margin-bottom:2rem;color:rgba(255,255,255,.72);font-size:1.1rem}
+
+/* Утверждённая шрифтовая система: Montserrat для акцентов, Inter для чтения. */
+:root{
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-display:'Montserrat','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body{font-family:var(--font-body)}
+.preloader-logo,
+.preloader-percentage,
+.logo,
+.footer-logo,
+.hero-text h1,
+.section-header h2,
+.service-title,
+.why-title,
+.process-step h3,
+.result-title,
+.pricing-name,
+.faq-question h3,
+.cta-content h2,
+.online-consultant h3,
+.footer-column h4,
+.floating-card-content h4,
+.error-page h1,
+.error-code,
+.hero-stat-number,
+.service-number,
+.process-step-number,
+.result-metric,
+.pricing-price,
+.section-badge,
+.btn,
+.nav-cta,
+.pricing-btn,
+.messenger-btn,
+.consultant-btn{font-family:var(--font-display)}
+.hero-text h1{font-weight:800}
+.section-header h2,
+.cta-content h2{font-weight:800}
+.service-title,
+.why-title,
+.process-step h3,
+.result-title,
+.pricing-name,
+.online-consultant h3,
+.footer-column h4,
+.floating-card-content h4,
+.faq-question h3{font-weight:700}
+.btn,
+.nav-cta,
+.section-badge{font-weight:600}
+.pricing-btn,
+.messenger-btn,
+.consultant-btn{font-weight:700}
+.chat-window,
+.chat-window button,
+.chat-window input{font-family:var(--font-body)}
