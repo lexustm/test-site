@@ -242,25 +242,25 @@ body{font-family:var(--font-body)}
 }
 .process-timeline::after{
   position:absolute;
-  top:51px;
-  left:4%;
-  z-index:0;
-  width:96px;
-  height:11px;
-  border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(255,255,255,1) 0%,rgba(216,204,255,.98) 18%,rgba(139,92,246,.72) 46%,rgba(124,58,237,.24) 72%,transparent 100%);
-  box-shadow:0 0 12px rgba(255,255,255,.9),0 0 28px rgba(167,139,250,.85),0 0 52px rgba(124,58,237,.5);
-  filter:blur(.4px);
-  transform:translateX(-50%);
+  top:53px;
+  left:-6%;
+  z-index:1;
+  width:16%;
+  height:7px;
+  border-radius:7px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.98),transparent);
+  box-shadow:0 0 14px rgba(255,255,255,.5),0 0 30px rgba(167,139,250,.42);
+  filter:blur(1px);
   content:'';
-  animation:process-light 8s linear infinite;
+  animation:process-light 10s linear infinite;
 }
 @keyframes process-light{
-  0%{left:4%;opacity:0;transform:translateX(-50%) scaleX(.55)}
-  5%{opacity:1}
-  95%{opacity:1}
-  100%{left:96%;opacity:0;transform:translateX(-50%) scaleX(.55)}
+  0%{transform:translateX(0);opacity:0}
+  4%{opacity:1}
+  96%{opacity:1}
+  100%{transform:translateX(600%);opacity:0}
 }
+.process-steps{z-index:2}
 .process-step-number{
   width:110px;
   height:110px;
@@ -274,7 +274,8 @@ body{font-family:var(--font-body)}
   font-size:2.25rem;
   text-shadow:0 2px 14px rgba(124,58,237,.75);
   transform:rotate(-3deg);
-  animation:process-node-light 8s linear infinite;
+  z-index:2;
+  animation:process-node-light 10s linear infinite;
   transition:transform .45s cubic-bezier(.4,0,.2,1),background .45s,border-color .45s;
 }
 .process-step-number::before{
@@ -286,18 +287,22 @@ body{font-family:var(--font-body)}
   background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.015) 44%,transparent 45%);
   content:'';
 }
-.process-step:nth-child(1) .process-step-number{animation-delay:.56s}
-.process-step:nth-child(2) .process-step-number{animation-delay:2.7s;transform:rotate(3deg)}
-.process-step:nth-child(3) .process-step-number{animation-delay:4.83s}
-.process-step:nth-child(4) .process-step-number{animation-delay:6.96s;transform:rotate(3deg)}
+.process-step:nth-child(1) .process-step-number{animation-delay:0s}
+.process-step:nth-child(2) .process-step-number{animation-delay:2.4s;transform:rotate(3deg)}
+.process-step:nth-child(3) .process-step-number{animation-delay:5s}
+.process-step:nth-child(4) .process-step-number{animation-delay:7.6s;transform:rotate(3deg)}
 @keyframes process-node-light{
-  0%,7%,100%{
+  0%,25%,100%{
     border-color:rgba(255,255,255,.11);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -20px 34px rgba(124,58,237,.08),0 18px 38px rgba(15,10,31,.22),0 0 0 rgba(124,58,237,0);
   }
-  3%{
-    border-color:rgba(196,181,253,.82);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -24px 38px rgba(124,58,237,.22),0 22px 44px rgba(76,29,149,.34),0 0 22px rgba(255,255,255,.55),0 0 62px rgba(124,58,237,.72),0 18px 54px rgba(124,58,237,.65);
+  5%,20%{
+    border-color:rgba(167,139,250,.28);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -22px 36px rgba(124,58,237,.12),0 20px 42px rgba(76,29,149,.25),0 0 24px rgba(124,58,237,.2),0 16px 42px rgba(124,58,237,.22);
+  }
+  12%{
+    border-color:rgba(196,181,253,.58);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -24px 40px rgba(124,58,237,.18),0 22px 46px rgba(76,29,149,.3),0 0 34px rgba(167,139,250,.36),0 18px 58px rgba(124,58,237,.42);
   }
 }
 .process-step:hover .process-step-number{
