@@ -11,6 +11,7 @@
   const chatOverlay = document.getElementById("chatOverlay");
   const chatLauncher = document.querySelector("[data-chat-toggle]");
   const chatMessages = document.getElementById("chatMessages");
+  const chatQuickActions = document.getElementById("chatQuickActions");
   const chatInput = document.getElementById("chatInput");
   const chatForm = document.getElementById("chatForm");
 
@@ -223,6 +224,180 @@
     chatWindow?.classList.toggle("expanded");
   });
 
+  const services = [
+    {
+      id: "smm",
+      label: "SMM-продвижение",
+      button: "SMM и соцсети",
+      task: "Нужно продвижение в соцсетях",
+      keywords: [
+        "smm",
+        "смм",
+        "соцсет",
+        "социальн сет",
+        "вести группу",
+        "ведение группы",
+        "контент-план",
+        "контент план",
+        "посты",
+        "сторис",
+        "оформить группу",
+        "оформить соцсет",
+      ],
+    },
+    {
+      id: "ads",
+      label: "реклама",
+      button: "Реклама",
+      task: "Нужно запустить рекламу",
+      keywords: [
+        "реклам",
+        "таргет",
+        "директ",
+        "лиды",
+        "заявки",
+        "рекламн кабинет",
+        "продвижение в яндекс",
+        "продвижение во вконтакте",
+      ],
+    },
+    {
+      id: "marketplaces",
+      label: "карточки для маркетплейсов",
+      button: "Маркетплейсы",
+      task: "Нужно оформить карточки товара",
+      keywords: [
+        "маркетплейс",
+        "wildberries",
+        "вайлдберриз",
+        "wb",
+        "ozon",
+        "озон",
+        "яндекс маркет",
+        "карточк товара",
+        "rich-контент",
+        "рич-контент",
+      ],
+    },
+    {
+      id: "video",
+      label: "монтаж видео",
+      button: "Видео",
+      task: "Нужен монтаж видео",
+      keywords: [
+        "видео",
+        "монтаж",
+        "reels",
+        "рилс",
+        "shorts",
+        "шортс",
+        "youtube",
+        "ютуб",
+        "субтитр",
+        "цветокоррекц",
+      ],
+    },
+    {
+      id: "bots",
+      label: "чат-боты и автоматизация",
+      button: "Чат-боты",
+      task: "Нужен чат-бот или автоматизация",
+      keywords: [
+        "чат-бот",
+        "чат бот",
+        "бота",
+        "бот для",
+        "автоворонк",
+        "автоматизац",
+        "автоответчик",
+        "рассылк",
+        "интеграц",
+      ],
+    },
+    {
+      id: "copywriting",
+      label: "тексты",
+      button: "Тексты",
+      task: "Нужны тексты",
+      keywords: [
+        "копирайт",
+        "текст",
+        "стать",
+        "описание",
+        "email-рассылк",
+        "письмо",
+        "пост для",
+      ],
+    },
+    {
+      id: "design",
+      label: "дизайн",
+      button: "Дизайн",
+      task: "Нужен дизайн",
+      keywords: [
+        "дизайн",
+        "визуал",
+        "логотип",
+        "фирменн",
+        "визитк",
+        "полиграф",
+        "инфограф",
+        "презентац",
+        "ретуш",
+        "баннер",
+        "креатив",
+      ],
+    },
+    {
+      id: "seo",
+      label: "SEO-оптимизация",
+      button: "SEO",
+      task: "Нужна SEO-оптимизация",
+      keywords: [
+        "seo",
+        "сео",
+        "поисков",
+        "семантик",
+        "мета-тег",
+        "метатег",
+        "оптимизация сайта",
+        "продвижение сайта",
+      ],
+    },
+    {
+      id: "analytics",
+      label: "аналитика и исследования",
+      button: "Аналитика",
+      task: "Нужен аудит или аналитика",
+      keywords: [
+        "аналитик",
+        "аудит",
+        "исследован",
+        "анализ конкурент",
+        "целевая аудитория",
+        "целевой аудитории",
+        "отчет",
+        "отчёт",
+        "рекомендац",
+      ],
+    },
+  ];
+
+  const serviceById = new Map(services.map((service) => [service.id, service]));
+  const chatState = {
+    task: "",
+    serviceIds: [],
+    workFormat: "",
+    timing: "",
+  };
+
+  const normalizeText = (text) =>
+    text
+      .toLocaleLowerCase("ru-RU")
+      .replaceAll("ё", "е")
+      .replace(/\s+/g, " ")
+      .trim();
+
   const appendMessage = (message, type = "bot") => {
     if (!chatMessages) return;
 
@@ -231,7 +406,7 @@
 
     const avatar = document.createElement("div");
     avatar.className = "chat-message-avatar";
-    avatar.textContent = type === "user" ? "👤" : "👨‍💻";
+    avatar.textContent = type === "user" ? "👤" : "🤖";
 
     const content = document.createElement("div");
     content.className = "chat-message-content";
@@ -247,7 +422,7 @@
     return paragraph;
   };
 
-  const appendBotReply = (intro, linkText, ending = "") => {
+  const appendTelegramReply = (message, draft, linkText = "Открыть Telegram") => {
     if (!chatMessages) return;
 
     const wrapper = document.createElement("div");
@@ -255,59 +430,272 @@
 
     const avatar = document.createElement("div");
     avatar.className = "chat-message-avatar";
-    avatar.textContent = "👨‍💻";
+    avatar.textContent = "🤖";
 
     const content = document.createElement("div");
     content.className = "chat-message-content";
     const paragraph = document.createElement("p");
-    paragraph.append(document.createTextNode(intro));
+    paragraph.textContent = message;
 
     const link = document.createElement("a");
-    link.href = TELEGRAM_URL;
+    link.href = `${TELEGRAM_URL}?text=${encodeURIComponent(draft)}`;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
+    link.className = "chat-telegram-link";
     link.textContent = linkText;
-    paragraph.append(link, document.createTextNode(ending));
 
-    content.appendChild(paragraph);
+    const note = document.createElement("small");
+    note.className = "chat-draft-note";
+    note.textContent = "Текст откроется как черновик. Отправить его можно только вручную.";
+
+    content.append(paragraph, link, note);
     wrapper.append(avatar, content);
     chatMessages.appendChild(wrapper);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   };
 
-  const sendMessage = (message) => {
-    const cleanMessage = message.trim();
+  const renderQuickActions = (actions) => {
+    if (!chatQuickActions) return;
+
+    const buttons = actions.map((action) => {
+      const button = document.createElement("button");
+      button.className = "chat-quick-btn";
+      button.type = "button";
+      button.textContent = action.label;
+      button.addEventListener("click", () => {
+        if (action.userText) appendMessage(action.userText, "user");
+        action.run();
+      });
+      return button;
+    });
+
+    chatQuickActions.replaceChildren(...buttons);
+  };
+
+  const joinLabels = (labels) => {
+    if (labels.length < 2) return labels[0] || "";
+    return `${labels.slice(0, -1).join(", ")} и ${labels.at(-1)}`;
+  };
+
+  const findServices = (message) => {
+    const normalized = normalizeText(message);
+    return services
+      .map((service) => ({
+        id: service.id,
+        score: service.keywords.reduce(
+          (score, keyword) =>
+            score + (normalized.includes(normalizeText(keyword)) ? 1 : 0),
+          0,
+        ),
+      }))
+      .filter((result) => result.score > 0)
+      .sort((first, second) => second.score - first.score)
+      .map((result) => result.id);
+  };
+
+  const serviceActions = () =>
+    services.map((service) => ({
+      label: service.button,
+      userText: service.button,
+      run: () => selectTask(service.task, [service.id]),
+    }));
+
+  const showServiceChoices = () => {
+    renderQuickActions([
+      ...serviceActions(),
+      {
+        label: "Цены",
+        userText: "Сколько стоит работа?",
+        run: showPrices,
+      },
+    ]);
+  };
+
+  const askWorkFormat = () => {
+    const labels = chatState.serviceIds
+      .map((id) => serviceById.get(id)?.label)
+      .filter(Boolean);
+    appendMessage(
+      `Для такой задачи подойдут: ${joinLabels(labels)}. Это разовая работа или нужна помощь на постоянной основе?`,
+    );
+    renderQuickActions([
+      {
+        label: "Разовая задача",
+        userText: "Разовая задача",
+        run: () => selectWorkFormat("разовая задача"),
+      },
+      {
+        label: "На постоянной основе",
+        userText: "На постоянной основе",
+        run: () => selectWorkFormat("постоянная работа"),
+      },
+      {
+        label: "Пока не знаю",
+        userText: "Пока не знаю",
+        run: () => selectWorkFormat("нужно обсудить"),
+      },
+    ]);
+  };
+
+  function selectTask(task, serviceIds) {
+    chatState.task = task.slice(0, 600);
+    chatState.serviceIds = [...new Set(serviceIds)];
+    chatState.workFormat = "";
+    chatState.timing = "";
+    askWorkFormat();
+  }
+
+  const selectWorkFormat = (workFormat) => {
+    chatState.workFormat = workFormat;
+    appendMessage("Когда хотелось бы начать?");
+    renderQuickActions([
+      {
+        label: "Как можно скорее",
+        userText: "Как можно скорее",
+        run: () => finishBrief("как можно скорее"),
+      },
+      {
+        label: "В течение месяца",
+        userText: "В течение месяца",
+        run: () => finishBrief("в течение месяца"),
+      },
+      {
+        label: "Срок не горит",
+        userText: "Срок не горит",
+        run: () => finishBrief("срок не горит"),
+      },
+    ]);
+  };
+
+  const resetBrief = () => {
+    chatState.task = "";
+    chatState.serviceIds = [];
+    chatState.workFormat = "";
+    chatState.timing = "";
+    appendMessage("Хорошо. Напишите новую задачу или выберите направление ниже.");
+    showServiceChoices();
+    chatInput?.focus();
+  };
+
+  const finishBrief = (timing) => {
+    chatState.timing = timing;
+    const labels = chatState.serviceIds
+      .map((id) => serviceById.get(id)?.label)
+      .filter(Boolean);
+    const draft = [
+      "Здравствуйте! Пишу с сайта VIBELINK.",
+      "",
+      `Задача: ${chatState.task}`,
+      `Подходящие услуги: ${joinLabels(labels)}`,
+      `Формат: ${chatState.workFormat}`,
+      `Когда: ${chatState.timing}`,
+      "",
+      "Подскажите, пожалуйста, сможете помочь?",
+    ].join("\n");
+
+    appendTelegramReply(
+      "Готово. Собрал короткое сообщение, чтобы не пришлось повторять всё заново.",
+      draft,
+      "Открыть Telegram с сообщением",
+    );
+    renderQuickActions([
+      {
+        label: "Обсудить другую задачу",
+        userText: "Хочу обсудить другую задачу",
+        run: resetBrief,
+      },
+    ]);
+  };
+
+  function showPrices(showChoices = true) {
+    appendMessage(
+      "На сайте есть ориентиры: разовая задача — от 5 000 ₽, пакет услуг — от 20 000 ₽ в месяц, консультация — 3 000 ₽. Точная сумма зависит от объёма.",
+    );
+    if (showChoices) {
+      appendMessage("Что нужно сделать?");
+      showServiceChoices();
+    }
+  }
+
+  const answerGeneralQuestion = (message, showChoices = true) => {
+    const normalized = normalizeText(message);
+
+    if (/цен|стоим|сколько|прайс|бюджет/.test(normalized)) {
+      showPrices(showChoices);
+      return true;
+    }
+    if (/гарант|результат|окуп|продаж/.test(normalized)) {
+      appendMessage(
+        "Заранее обещать точные цифры было бы нечестно: результат зависит от ниши, продукта, бюджета и аудитории. До старта можно оценить задачу, предложить план и договориться, по каким показателям смотреть результат.",
+      );
+      if (showChoices) showServiceChoices();
+      return true;
+    }
+    if (/срок|как быстро|когда нач|приступ|сроч/.test(normalized)) {
+      appendMessage(
+        "Срок зависит от задачи и текущей загрузки. Обычно начать можно в течение нескольких дней, а срочность лучше сразу указать в сообщении.",
+      );
+      if (showChoices) showServiceChoices();
+      return true;
+    }
+    if (/разов|постоян|ежемесяч|формат работ/.test(normalized)) {
+      appendMessage(
+        "Можно заказать одну конкретную задачу или договориться о регулярной работе. Формат лучше выбирать после короткого обсуждения объёма.",
+      );
+      if (showChoices) showServiceChoices();
+      return true;
+    }
+    if (/контакт|связ|телеграм|telegram|вконтакте|написать алексе/.test(normalized)) {
+      const draft = "Здравствуйте! Пишу с сайта VIBELINK. Хочу обсудить задачу.";
+      appendTelegramReply("Связаться с Алексеем можно в Telegram.", draft);
+      if (showChoices) showServiceChoices();
+      return true;
+    }
+
+    return false;
+  };
+
+  const processMessage = (message) => {
+    const cleanMessage = message.replace(/\s+/g, " ").trim().slice(0, 600);
     if (!cleanMessage) return;
 
     appendMessage(cleanMessage, "user");
     if (chatInput) chatInput.value = "";
 
-    window.setTimeout(() => {
-      appendBotReply(
-        "Спасибо за сообщение! Напишите в ",
-        "Telegram",
-        " — там отвечу быстрее! 😊",
-      );
-    }, 800);
+    const matchedServices = findServices(cleanMessage);
+    if (matchedServices.length > 0) {
+      answerGeneralQuestion(cleanMessage, false);
+      selectTask(cleanMessage, matchedServices);
+      return;
+    }
+
+    if (answerGeneralQuestion(cleanMessage)) return;
+
+    appendMessage(
+      "Я пока не понял, к какой услуге отнести задачу. Напишите, что хотите получить в итоге — например, запустить рекламу, оформить соцсети или сделать карточки товара.",
+    );
+    showServiceChoices();
   };
 
   chatForm?.addEventListener("submit", (event) => {
     event.preventDefault();
-    sendMessage(chatInput?.value || "");
+    processMessage(chatInput?.value || "");
   });
 
-  document.querySelectorAll("[data-chat-message]").forEach((button) => {
+  document.querySelectorAll("[data-chat-intent]").forEach((button) => {
     button.addEventListener("click", () => {
-      const message = button.getAttribute("data-chat-message") || "";
-      appendMessage(message, "user");
-      window.setTimeout(() => {
-        appendBotReply(
-          "Отлично! Для подробной консультации напишите в ",
-          "Telegram (@smmtotal)",
-          " 🚀",
-        );
-      }, 600);
+      const service = serviceById.get(button.getAttribute("data-chat-intent"));
+      if (!service) return;
+      appendMessage(button.textContent?.trim() || service.button, "user");
+      selectTask(service.task, [service.id]);
     });
+  });
+
+  document.querySelector('[data-chat-action="other"]')?.addEventListener("click", () => {
+    appendMessage("Другая задача", "user");
+    appendMessage("Расскажите своими словами, что нужно получить в итоге.");
+    renderQuickActions([]);
+    chatInput?.focus();
   });
 
   document.addEventListener("keydown", (event) => {

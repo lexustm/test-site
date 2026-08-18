@@ -4,6 +4,17 @@
 /* Улучшения доступности без изменения исходного дизайна. */
 :focus-visible{outline:3px solid #c4b5fd;outline-offset:4px}
 .chat-message-content a{color:#7c3aed;font-weight:700}
+.chat-message-content{overflow-wrap:anywhere}
+.chat-quick-actions{max-height:116px;overflow-y:auto}
+.chat-privacy-note{margin:0;padding:.2rem 1.5rem .7rem;background:#fff;color:#94a3b8;font-size:.72rem;line-height:1.35}
+.chat-telegram-link{display:flex;align-items:center;justify-content:center;margin-top:.85rem;padding:.75rem 1rem;border-radius:14px;background:var(--gradient-1);color:#fff!important;text-align:center;text-decoration:none;font-size:.87rem;line-height:1.25}
+.chat-telegram-link:hover{box-shadow:0 8px 24px rgba(124,58,237,.3);transform:translateY(-1px)}
+.chat-draft-note{display:block;margin-top:.55rem;color:#64748b;font-size:.72rem;line-height:1.35}
+.chat-input{min-width:0}
+@media (max-width:768px){
+  .chat-quick-actions{max-height:132px}
+  .chat-privacy-note{padding-bottom:.55rem}
+}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
