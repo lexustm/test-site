@@ -1,239 +1,340 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const body = document.body;
-  const header = document.querySelector('[data-header]');
-  const menuButton = document.querySelector('.menu-toggle');
-  const menu = document.querySelector('.main-nav');
-  const progress = document.querySelector('.scroll-progress span');
-  const backToTop = document.querySelector('[data-back-to-top]');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(() => {
+  "use strict";
 
-  requestAnimationFrame(() => body.classList.add('is-ready'));
+  const TELEGRAM_URL = "https://t.me/smmtotal";
+  const VK_URL = "https://vk.com/tot_al";
+  const navbar = document.getElementById("navbar");
+  const backToTop = document.getElementById("backToTop");
+  const menuToggle = document.getElementById("menuToggle");
+  const navLinks = document.getElementById("navLinks");
+  const chatWindow = document.getElementById("chatWindow");
+  const chatOverlay = document.getElementById("chatOverlay");
+  const chatLauncher = document.querySelector("[data-chat-toggle]");
+  const chatMessages = document.getElementById("chatMessages");
+  const chatInput = document.getElementById("chatInput");
+  const chatForm = document.getElementById("chatForm");
 
-  document.querySelectorAll('[data-year]').forEach((element) => {
-    element.textContent = String(new Date().getFullYear());
+  document.querySelectorAll('.protected-link[data-valid="tg"]').forEach((link) => {
+    link.href = TELEGRAM_URL;
+  });
+  document.querySelectorAll('.protected-link[data-valid="vk"]').forEach((link) => {
+    link.href = VK_URL;
   });
 
-  const closeMenu = () => {
-    if (!menuButton || !menu) return;
-    menuButton.setAttribute('aria-expanded', 'false');
-    menu.classList.remove('is-open');
-  };
+  const preloader = document.getElementById("preloader");
+  const progressBar = document.getElementById("progressBar");
+  const percentageDisplay = document.getElementById("percentageDisplay");
 
-  if (menuButton && menu) {
-    menuButton.addEventListener('click', () => {
-      const willOpen = menuButton.getAttribute('aria-expanded') !== 'true';
-      menuButton.setAttribute('aria-expanded', String(willOpen));
-      menu.classList.toggle('is-open', willOpen);
-    });
-
-    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-
-    document.addEventListener('click', (event) => {
-      if (!menu.contains(event.target) && !menuButton.contains(event.target)) closeMenu();
-    });
+  if (preloader && progressBar && percentageDisplay) {
+    progressBar.style.transition = "width 0.3s ease-out";
+    progressBar.style.width = "100%";
+    percentageDisplay.textContent = "100%";
+    window.setTimeout(() => preloader.classList.add("hidden"), 500);
   }
 
-  const updateScrollState = () => {
-    const scrollTop = window.scrollY;
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const percent = scrollable > 0 ? Math.min((scrollTop / scrollable) * 100, 100) : 0;
+  const finePointer = window.matchMedia("(min-width: 992px) and (pointer: fine)");
 
-    if (header) header.classList.toggle('is-scrolled', scrollTop > 40);
-    if (progress) progress.style.width = `${percent}%`;
-    if (backToTop) backToTop.classList.toggle('is-visible', scrollTop > 650);
-  };
+  if (finePointer.matches) {
+    const cursor = document.getElementById("cursor");
+    const follower = document.getElementById("cursorFollower");
 
-  updateScrollState();
-  window.addEventListener('scroll', updateScrollState, { passive: true });
+    if (cursor && follower) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let cursorX = mouseX;
+      let cursorY = mouseY;
+      let followerX = mouseX;
+      let followerY = mouseY;
 
-  if (backToTop) {
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
-    });
-  }
-
-  const revealItems = document.querySelectorAll('[data-reveal]');
-  if ('IntersectionObserver' in window && !reducedMotion) {
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
+      document.addEventListener("mousemove", (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -45px' });
 
-    revealItems.forEach((item) => revealObserver.observe(item));
-  } else {
-    revealItems.forEach((item) => item.classList.add('is-visible'));
-  }
+      const animateCursor = () => {
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        followerX += (mouseX - followerX) * 0.1;
+        followerY += (mouseY - followerY) * 0.1;
+        cursor.style.left = `${cursorX}px`;
+        cursor.style.top = `${cursorY}px`;
+        follower.style.left = `${followerX}px`;
+        follower.style.top = `${followerY}px`;
+        window.requestAnimationFrame(animateCursor);
+      };
 
-  const navigationLinks = Array.from(document.querySelectorAll('.main-nav a[href^="#"]'));
-  const observedSections = navigationLinks
-    .map((link) => document.querySelector(link.getAttribute('href')))
-    .filter(Boolean);
+      animateCursor();
 
-  if ('IntersectionObserver' in window && observedSections.length) {
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        navigationLinks.forEach((link) => {
-          link.classList.toggle('is-active', link.getAttribute('href') === `#${entry.target.id}`);
+      document
+        .querySelectorAll(
+          "a, button, .service-card, .why-card, .pricing-card, .faq-question, .result-card",
+        )
+        .forEach((element) => {
+          element.addEventListener("mouseenter", () => {
+            cursor.classList.add("hover");
+            follower.classList.add("hover");
+          });
+          element.addEventListener("mouseleave", () => {
+            cursor.classList.remove("hover");
+            follower.classList.remove("hover");
+          });
         });
-      });
-    }, { rootMargin: '-30% 0px -60%', threshold: 0 });
 
-    observedSections.forEach((section) => sectionObserver.observe(section));
+      document.addEventListener("mousedown", () => cursor.classList.add("click"));
+      document.addEventListener("mouseup", () => cursor.classList.remove("click"));
+    }
   }
 
-  document.querySelectorAll('.faq-list details').forEach((details) => {
-    details.addEventListener('toggle', () => {
-      if (!details.open) return;
-      document.querySelectorAll('.faq-list details').forEach((other) => {
-        if (other !== details) other.open = false;
-      });
+  const updatePageControls = () => {
+    const isScrolled = window.scrollY > 100;
+    navbar?.classList.toggle("scrolled", isScrolled);
+    backToTop?.classList.toggle("visible", isScrolled);
+  };
+
+  window.addEventListener("scroll", updatePageControls, { passive: true });
+  updatePageControls();
+
+  const setMenu = (open) => {
+    navLinks?.classList.toggle("active", open);
+    menuToggle?.classList.toggle("active", open);
+    menuToggle?.setAttribute("aria-expanded", String(open));
+    menuToggle?.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+  };
+
+  menuToggle?.addEventListener("click", () => {
+    setMenu(!navLinks?.classList.contains("active"));
+  });
+
+  document.querySelectorAll(".nav-links a").forEach((link) => {
+    link.addEventListener("click", () => setMenu(false));
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const selector = link.getAttribute("href");
+      if (!selector || selector === "#") return;
+      const target = document.querySelector(selector);
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
-  const chatPanel = document.querySelector('#chat-panel');
-  const chatOverlay = document.querySelector('[data-chat-overlay]');
-  const chatMessages = document.querySelector('[data-chat-messages]');
-  const chatForm = document.querySelector('[data-chat-form]');
-  const chatInput = document.querySelector('#chat-input');
-  const chatLauncher = document.querySelector('.chat-launcher');
-  const chatOpenButtons = document.querySelectorAll('[data-chat-open]');
-  const chatCloseButton = document.querySelector('[data-chat-close]');
-  const chatExpandButton = document.querySelector('[data-chat-expand]');
-  const quickButtons = document.querySelectorAll('[data-chat-message]');
-  let lastFocusedElement = null;
-  let replyTimer = null;
+  backToTop?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
-  const scrollChat = () => {
-    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
-  };
+  document.querySelectorAll(".faq-question").forEach((question) => {
+    const toggleQuestion = () => {
+      const item = question.closest(".faq-item");
+      const willOpen = !item?.classList.contains("active");
 
-  const createAvatar = (text, className) => {
-    const avatar = document.createElement('span');
-    avatar.textContent = text;
-    if (className) avatar.className = className;
-    return avatar;
-  };
+      document.querySelectorAll(".faq-item").forEach((faqItem) => {
+        faqItem.classList.remove("active");
+        faqItem.querySelector(".faq-question")?.setAttribute("aria-expanded", "false");
+      });
 
-  const addUserMessage = (text) => {
-    if (!chatMessages) return;
-    const message = document.createElement('div');
-    message.className = 'chat-message chat-message-user';
-    const content = document.createElement('div');
-    const paragraph = document.createElement('p');
-    paragraph.textContent = text;
-    content.appendChild(paragraph);
-    message.append(createAvatar('Вы'), content);
-    chatMessages.appendChild(message);
-    scrollChat();
-  };
+      if (willOpen && item) {
+        item.classList.add("active");
+        question.setAttribute("aria-expanded", "true");
+      }
+    };
 
-  const addBotReply = () => {
-    if (!chatMessages) return;
-    const message = document.createElement('div');
-    message.className = 'chat-message chat-message-bot';
-    const content = document.createElement('div');
-    const firstLine = document.createElement('p');
-    const secondLine = document.createElement('p');
-    const telegramLink = document.createElement('a');
-
-    firstLine.textContent = 'Спасибо за вопрос! Здесь работает демонстрационный помощник.';
-    secondLine.append('Для живого ответа напишите Алексею в ');
-    telegramLink.href = 'https://t.me/smmtotal';
-    telegramLink.target = '_blank';
-    telegramLink.rel = 'noopener noreferrer';
-    telegramLink.textContent = 'Telegram';
-    secondLine.append(telegramLink, ' — там он ответит лично.');
-    content.append(firstLine, secondLine);
-    message.append(createAvatar('А'), content);
-    chatMessages.appendChild(message);
-    scrollChat();
-  };
-
-  const sendChatMessage = (text) => {
-    const normalized = text.trim().slice(0, 300);
-    if (!normalized) return;
-    addUserMessage(normalized);
-    window.clearTimeout(replyTimer);
-    replyTimer = window.setTimeout(addBotReply, reducedMotion ? 0 : 550);
-  };
-
-  const getFocusableElements = () => {
-    if (!chatPanel) return [];
-    return Array.from(chatPanel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])'))
-      .filter((element) => !element.hidden && element.offsetParent !== null);
-  };
-
-  const openChat = (trigger) => {
-    if (!chatPanel || !chatOverlay) return;
-    lastFocusedElement = trigger || document.activeElement;
-    chatPanel.hidden = false;
-    chatOverlay.hidden = false;
-    body.classList.add('chat-is-open');
-    if (chatLauncher) chatLauncher.setAttribute('aria-expanded', 'true');
-
-    requestAnimationFrame(() => {
-      chatPanel.classList.add('is-active');
-      chatOverlay.classList.add('is-active');
-      window.setTimeout(() => chatInput?.focus(), reducedMotion ? 0 : 180);
+    question.addEventListener("click", toggleQuestion);
+    question.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleQuestion();
+      }
     });
+  });
+
+  const particles = document.getElementById("particles");
+  if (particles) {
+    for (let index = 0; index < 15; index += 1) {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.animationDuration = `${Math.random() * 15 + 10}s`;
+      particle.style.animationDelay = `${Math.random() * 10}s`;
+      particle.style.opacity = String(Math.random() * 0.5 + 0.2);
+      particles.appendChild(particle);
+    }
+  }
+
+  const animatedElements = document.querySelectorAll(
+    ".service-card, .why-card, .result-card, .pricing-card, .faq-item, .process-step",
+  );
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+    );
+
+    animatedElements.forEach((element) => {
+      element.classList.add("animate-on-scroll");
+      observer.observe(element);
+    });
+  } else {
+    animatedElements.forEach((element) => element.classList.add("visible"));
+  }
+
+  let returnFocusTo = null;
+
+  const setChat = (open) => {
+    if (!chatWindow || !chatOverlay) return;
+
+    chatWindow.classList.toggle("active", open);
+    chatOverlay.classList.toggle("active", open);
+    chatWindow.setAttribute("aria-hidden", String(!open));
+    chatLauncher?.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+
+    if (open) {
+      returnFocusTo = document.activeElement;
+      window.setTimeout(() => chatInput?.focus(), 100);
+    } else {
+      chatWindow.classList.remove("expanded");
+      if (returnFocusTo instanceof HTMLElement) returnFocusTo.focus();
+    }
   };
 
-  const closeChat = () => {
-    if (!chatPanel || !chatOverlay) return;
-    chatPanel.classList.remove('is-active', 'is-expanded');
-    chatOverlay.classList.remove('is-active');
-    body.classList.remove('chat-is-open');
-    if (chatLauncher) chatLauncher.setAttribute('aria-expanded', 'false');
+  document.querySelectorAll("[data-chat-open]").forEach((button) => {
+    button.addEventListener("click", () => setChat(true));
+  });
+
+  chatLauncher?.addEventListener("click", () => {
+    setChat(!chatWindow?.classList.contains("active"));
+  });
+
+  document.querySelectorAll("[data-chat-close]").forEach((button) => {
+    button.addEventListener("click", () => setChat(false));
+  });
+
+  document.querySelector("[data-chat-expand]")?.addEventListener("click", () => {
+    chatWindow?.classList.toggle("expanded");
+  });
+
+  const appendMessage = (message, type = "bot") => {
+    if (!chatMessages) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = type === "user" ? "chat-message user" : "chat-message";
+
+    const avatar = document.createElement("div");
+    avatar.className = "chat-message-avatar";
+    avatar.textContent = type === "user" ? "👤" : "👨‍💻";
+
+    const content = document.createElement("div");
+    content.className = "chat-message-content";
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = message;
+
+    content.appendChild(paragraph);
+    wrapper.append(avatar, content);
+    chatMessages.appendChild(wrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return paragraph;
+  };
+
+  const appendBotReply = (intro, linkText, ending = "") => {
+    if (!chatMessages) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "chat-message";
+
+    const avatar = document.createElement("div");
+    avatar.className = "chat-message-avatar";
+    avatar.textContent = "👨‍💻";
+
+    const content = document.createElement("div");
+    content.className = "chat-message-content";
+    const paragraph = document.createElement("p");
+    paragraph.append(document.createTextNode(intro));
+
+    const link = document.createElement("a");
+    link.href = TELEGRAM_URL;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = linkText;
+    paragraph.append(link, document.createTextNode(ending));
+
+    content.appendChild(paragraph);
+    wrapper.append(avatar, content);
+    chatMessages.appendChild(wrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  };
+
+  const sendMessage = (message) => {
+    const cleanMessage = message.trim();
+    if (!cleanMessage) return;
+
+    appendMessage(cleanMessage, "user");
+    if (chatInput) chatInput.value = "";
 
     window.setTimeout(() => {
-      chatPanel.hidden = true;
-      chatOverlay.hidden = true;
-      if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
-    }, reducedMotion ? 0 : 280);
+      appendBotReply(
+        "Спасибо за сообщение! Напишите в ",
+        "Telegram",
+        " — там отвечу быстрее! 😊",
+      );
+    }, 800);
   };
 
-  chatOpenButtons.forEach((button) => button.addEventListener('click', () => openChat(button)));
-  chatCloseButton?.addEventListener('click', closeChat);
-  chatOverlay?.addEventListener('click', closeChat);
-  chatExpandButton?.addEventListener('click', () => chatPanel?.classList.toggle('is-expanded'));
-
-  quickButtons.forEach((button) => {
-    button.addEventListener('click', () => sendChatMessage(button.dataset.chatMessage || ''));
-  });
-
-  chatForm?.addEventListener('submit', (event) => {
+  chatForm?.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!chatInput) return;
-    sendChatMessage(chatInput.value);
-    chatInput.value = '';
-    chatInput.focus();
+    sendMessage(chatInput?.value || "");
   });
 
-  document.addEventListener('keydown', (event) => {
-    if (!chatPanel || chatPanel.hidden) return;
-
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      closeChat();
-      return;
-    }
-
-    if (event.key !== 'Tab') return;
-    const focusable = getFocusableElements();
-    if (!focusable.length) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
+  document.querySelectorAll("[data-chat-message]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const message = button.getAttribute("data-chat-message") || "";
+      appendMessage(message, "user");
+      window.setTimeout(() => {
+        appendBotReply(
+          "Отлично! Для подробной консультации напишите в ",
+          "Telegram (@smmtotal)",
+          " 🚀",
+        );
+      }, 600);
+    });
   });
-});
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (chatWindow?.classList.contains("active")) setChat(false);
+    if (navLinks?.classList.contains("active")) setMenu(false);
+  });
+
+  if (finePointer.matches) {
+    document
+      .querySelectorAll(".service-card, .why-card, .result-card, .pricing-card")
+      .forEach((card) => {
+        card.addEventListener("mousemove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const rotateX = (y - rect.height / 2) / 25;
+          const rotateY = (rect.width / 2 - x) / 25;
+          card.style.transition = "transform 0.15s ease-out";
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transition = "transform 0.6s ease-out";
+          card.style.transform =
+            "perspective(1000px) rotateX(0) rotateY(0) translateY(0)";
+        });
+      });
+  }
+})();
