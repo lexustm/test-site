@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#0a0a0b">
+  <meta name="description" content="Демонстрационная страница контактов digital-студии SFERA.">
+  <title>Контакты — SFERA</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body class="page page-contact">
+  <a class="skip-link" href="#content">Перейти к содержимому</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="index.html" aria-label="SFERA — на главную">SFERA<span>•</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+      <span></span><span></span><span class="sr-only">Открыть меню</span>
+    </button>
+    <nav class="main-nav" id="main-menu" aria-label="Главное меню">
+      <a href="index.html">Главная</a>
+      <a href="services.html">Услуги</a>
+      <a href="contact.html" aria-current="page">Контакты</a>
+    </nav>
+    <a class="header-action magnetic" href="#brief">Заполнить бриф <span>↓</span></a>
+  </header>
+
+  <main id="content">
+    <section class="contact-layout">
+      <div class="contact-copy">
+        <p class="eyebrow reveal-item">Новый проект <span></span> начнём с диалога</p>
+        <h1>
+          <span class="title-line">Расскажите</span>
+          <span class="title-line title-accent">о своей идее.</span>
+        </h1>
+        <p class="page-lead reveal-item">Ответьте на три коротких вопроса. В настоящем проекте эту форму можно подключить к почте, CRM или мессенджеру.</p>
+
+        <div class="availability reveal-item">
+          <span class="status-dot"></span>
+          Готовы взять новый проект
+        </div>
+      </div>
+
+      <form class="brief-form reveal-item" id="brief" data-demo-form>
+        <div class="form-head">
+          <span>Короткий бриф</span>
+          <span>01—03</span>
+        </div>
+
+        <label>
+          <span>Как вас зовут?</span>
+          <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
+        </label>
+
+        <label>
+          <span>Что нужно создать?</span>
+          <select name="project" required>
+            <option value="" selected disabled>Выберите вариант</option>
+            <option>Лендинг</option>
+            <option>Сайт компании</option>
+            <option>Интернет-каталог</option>
+            <option>Пока не знаю</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Коротко о задаче</span>
+          <textarea name="message" rows="3" placeholder="Что должен делать будущий сайт?" required></textarea>
+        </label>
+
+        <button class="button button-primary form-submit magnetic" type="submit">
+          <span>Отправить заявку</span><b>↗</b>
+        </button>
+        <small>Демо-форма: введённые данные никуда не отправляются.</small>
+      </form>
+    </section>
+
+    <section class="contact-band" data-reveal>
+      <p>Сайт • Дизайн • Разработка • Запуск</p>
+      <strong>Сделаем сложное понятным.</strong>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="logo" href="index.html">SFERA<span>•</span></a>
+    <p>Демонстрационный проект на GitHub Pages</p>
+    <p>© <span data-year>2026</span></p>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite">
+    <span>✓</span>
+    <div><strong>Форма работает</strong><small>Это демонстрация — данные не отправлены.</small></div>
+  </div>
+  <div class="page-curtain" aria-hidden="true"></div>
+</body>
+</html>

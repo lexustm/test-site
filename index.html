@@ -1,23 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Мой первый сайт на GitHub</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#0a0a0b">
+  <meta name="description" content="Демонстрационный сайт digital-студии: разработка современных сайтов под ключ.">
+  <title>SFERA — сайты под ключ</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
 </head>
-<body>
-  <main class="hero">
-    <div class="card">
-      <span class="badge">Тестовый проект</span>
-      <h1>Сайт живёт в GitHub</h1>
-      <p id="message">HTML отвечает за структуру, CSS — за внешний вид, JavaScript — за интерактивность.</p>
-      <button id="demoButton" type="button">Нажми меня</button>
-      <small>Репозиторий: lexustm/test-site</small>
+<body class="page page-home">
+  <a class="skip-link" href="#content">Перейти к содержимому</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="index.html" aria-label="SFERA — на главную">SFERA<span>•</span></a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+      <span></span><span></span>
+      <span class="sr-only">Открыть меню</span>
+    </button>
+
+    <nav class="main-nav" id="main-menu" aria-label="Главное меню">
+      <a href="index.html" aria-current="page">Главная</a>
+      <a href="services.html">Услуги</a>
+      <a href="contact.html">Контакты</a>
+    </nav>
+
+    <a class="header-action magnetic" href="contact.html">Обсудить проект <span>↗</span></a>
+  </header>
+
+  <main id="content">
+    <section class="hero home-hero">
+      <div class="hero-copy">
+        <p class="eyebrow reveal-item">Digital studio <span></span> сайты под ключ</p>
+        <h1 class="hero-title" aria-label="Сайты, которые превращают внимание в действие">
+          <span class="title-line">Сайты, которые</span>
+          <span class="title-line title-accent">превращают</span>
+          <span class="title-line">внимание в действие.</span>
+        </h1>
+        <p class="hero-lead reveal-item">Стратегия, дизайн и разработка в одной команде. Создаём цифровой продукт, который выглядит сильно и помогает бизнесу расти.</p>
+
+        <div class="hero-actions reveal-item">
+          <a class="button button-primary magnetic" href="contact.html">Начать проект <span>↗</span></a>
+          <a class="text-link" href="services.html">Посмотреть услуги <span>→</span></a>
+        </div>
+
+        <div class="hero-facts reveal-item" aria-label="Ключевые преимущества">
+          <div><strong>14</strong><span>дней до первой версии</span></div>
+          <div><strong>3</strong><span>шага от идеи до запуска</span></div>
+          <div><strong>100%</strong><span>адаптивный дизайн</span></div>
+        </div>
+      </div>
+
+      <div class="hero-stage reveal-item" data-tilt aria-hidden="true">
+        <div class="stage-grid"></div>
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="stage-core">
+          <span>360°</span>
+          <p>идея → дизайн<br>→ запуск</p>
+        </div>
+        <div class="float-card float-card-top">
+          <span class="status-dot"></span>
+          проект в работе
+        </div>
+        <div class="float-card float-card-bottom">
+          <b>+47%</b>
+          <span>к конверсии</span>
+        </div>
+        <div class="stage-label">SFERA / DIGITAL / 2026</div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-label="Направления работы">
+      <div class="marquee-track">
+        <span>Лендинги</span><i>✦</i><span>Корпоративные сайты</span><i>✦</i><span>Интернет-каталоги</span><i>✦</i><span>UX/UI дизайн</span><i>✦</i>
+        <span>Лендинги</span><i>✦</i><span>Корпоративные сайты</span><i>✦</i><span>Интернет-каталоги</span><i>✦</i><span>UX/UI дизайн</span><i>✦</i>
+      </div>
     </div>
+
+    <section class="section value-section">
+      <div class="section-heading" data-reveal>
+        <p class="section-kicker">Не просто красиво</p>
+        <h2>Сайт как рабочий<br>инструмент бизнеса</h2>
+        <p>Каждое решение — от первого экрана до кнопки — ведёт пользователя к понятному действию.</p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card" data-reveal data-tilt>
+          <span class="card-number">01</span>
+          <div class="feature-icon">↗</div>
+          <h3>Стратегия</h3>
+          <p>Изучаем продукт, аудиторию и конкурентов. Сначала смысл — затем визуал.</p>
+        </article>
+        <article class="feature-card feature-card-accent" data-reveal data-tilt>
+          <span class="card-number">02</span>
+          <div class="feature-icon">✦</div>
+          <h3>Дизайн</h3>
+          <p>Создаём узнаваемый стиль, который остаётся удобным на любом экране.</p>
+        </article>
+        <article class="feature-card" data-reveal data-tilt>
+          <span class="card-number">03</span>
+          <div class="feature-icon">⌁</div>
+          <h3>Запуск</h3>
+          <p>Собираем, тестируем и публикуем готовый сайт. Всё работает — можно продвигать.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-panel" data-reveal>
+      <div>
+        <p>Есть идея?</p>
+        <h2>Давайте превратим её<br>в сильный сайт.</h2>
+      </div>
+      <a class="round-link magnetic" href="contact.html" aria-label="Перейти к обсуждению проекта">↗</a>
+    </section>
   </main>
 
-  <script src="js/main.js"></script>
+  <footer class="site-footer">
+    <a class="logo" href="index.html">SFERA<span>•</span></a>
+    <p>Демонстрационный проект на GitHub Pages</p>
+    <p>© <span data-year>2026</span></p>
+  </footer>
+
+  <div class="page-curtain" aria-hidden="true"></div>
 </body>
 </html>
