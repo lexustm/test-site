@@ -1,0 +1,24 @@
+{
+  "name": "VIBELINK — Digital-маркетолог Алексей",
+  "short_name": "VIBELINK",
+  "description": "Комплексный digital-маркетинг: SMM, реклама, дизайн, видео, чат-боты, SEO и аналитика",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10091f",
+  "theme_color": "#10091f",
+  "lang": "ru-RU",
+  "icons": [
+    {
+      "src": "favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
