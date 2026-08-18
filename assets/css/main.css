@@ -109,3 +109,50 @@ body{font-family:var(--font-body)}
 .chat-window,
 .chat-window button,
 .chat-window input{font-family:var(--font-body)}
+
+/* Бесшовная бегущая строка с равномерными разделителями. */
+.marquee{
+  display:flex;
+  align-items:center;
+  width:max-content;
+  animation:none;
+  will-change:transform;
+}
+.marquee.is-ready{
+  animation:marquee-seamless var(--marquee-duration,50s) linear infinite;
+}
+.marquee-content{
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+  gap:0;
+  padding:0;
+}
+.marquee-item{
+  display:inline-flex;
+  align-items:center;
+  flex-shrink:0;
+  gap:0;
+  white-space:nowrap;
+}
+.marquee-item::after{
+  content:'★';
+  flex-shrink:0;
+  margin-inline:2rem;
+  color:var(--primary);
+  font-size:.9em;
+  line-height:1;
+}
+@keyframes marquee-seamless{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(var(--marquee-shift),0,0)}
+}
+@media(max-width:768px){
+  .marquee-item::after{margin-inline:1.4rem}
+}
+@media(max-width:480px){
+  .marquee-item::after{margin-inline:1.1rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .marquee.is-ready{animation:none;transform:none}
+}

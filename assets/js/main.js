@@ -165,6 +165,53 @@
     }
   }
 
+  const marquee = document.querySelector("[data-marquee]");
+  const marqueeContent = marquee?.querySelector("[data-marquee-content]");
+
+  if (marquee && marqueeContent) {
+    let marqueeResizeTimer = 0;
+
+    const buildMarquee = () => {
+      marquee.classList.remove("is-ready");
+      marquee.querySelectorAll("[data-marquee-clone]").forEach((clone) => clone.remove());
+
+      const contentWidth = marqueeContent.getBoundingClientRect().width;
+      const viewportWidth = marquee.parentElement?.getBoundingClientRect().width ?? window.innerWidth;
+
+      if (!contentWidth) return;
+
+      const copyCount = Math.max(2, Math.ceil(viewportWidth / contentWidth) + 2);
+
+      for (let copyIndex = 1; copyIndex < copyCount; copyIndex += 1) {
+        const clone = marqueeContent.cloneNode(true);
+        clone.removeAttribute("data-marquee-content");
+        clone.setAttribute("data-marquee-clone", "");
+        clone.setAttribute("aria-hidden", "true");
+        marquee.appendChild(clone);
+      }
+
+      const pixelsPerSecond = window.matchMedia("(max-width: 768px)").matches ? 65 : 80;
+      const duration = Math.max(30, contentWidth / pixelsPerSecond);
+
+      marquee.style.setProperty("--marquee-shift", `${-contentWidth}px`);
+      marquee.style.setProperty("--marquee-duration", `${duration.toFixed(2)}s`);
+      window.requestAnimationFrame(() => marquee.classList.add("is-ready"));
+    };
+
+    const scheduleMarqueeBuild = () => {
+      window.clearTimeout(marqueeResizeTimer);
+      marqueeResizeTimer = window.setTimeout(buildMarquee, 150);
+    };
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(buildMarquee, buildMarquee);
+    } else {
+      buildMarquee();
+    }
+
+    window.addEventListener("resize", scheduleMarqueeBuild, { passive: true });
+  }
+
   const animatedElements = document.querySelectorAll(
     ".service-card, .why-card, .result-card, .pricing-card, .faq-item, .process-step",
   );
