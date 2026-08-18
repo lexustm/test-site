@@ -31,7 +31,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"VIBELINK","description":"Комплексный digital-маркетинг","url":"https://vibelink.ru","priceRange":"от 1500₽","areaServed":"Россия","sameAs":["https://t.me/smmtotal","https://vk.com/tot_al"]}</script>
     <!-- [VIBELINK-PROTECTION-WATERMARK-2025-ALEXEY-DIGITAL-MARKETING] -->
-<link rel="stylesheet" href="assets/css/main.css?v=bot-1">
+<link rel="stylesheet" href="assets/css/main.css?v=bot-2">
 <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body id="top">
@@ -634,32 +634,33 @@
     <div class="chat-overlay" id="chatOverlay" data-chat-close=""></div>
     <div class="chat-widget">
         <button class="chat-widget-btn" type="button" data-chat-toggle="" aria-label="Открыть виртуального помощника" aria-controls="chatWindow" aria-expanded="false">
-            <span class="chat-widget-icon">💬</span>
+            <span class="chat-widget-icon"><img src="assets/icons/chat.svg" alt="" aria-hidden="true"></span>
             <span class="chat-widget-badge">1</span>
         </button>
     </div>
     <div class="chat-window" id="chatWindow" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="chatTitle">
         <div class="chat-header">
-            <div class="chat-header-avatar">🤖</div>
+            <div class="chat-header-avatar"><img src="assets/icons/bot.svg" alt="" aria-hidden="true"></div>
             <div class="chat-header-info">
                 <h4 id="chatTitle">Помощник VIBELINK</h4>
-                <div class="chat-header-status">Отвечает автоматически</div>
+                <div class="chat-header-status">Чат-бот</div>
             </div>
             <div class="chat-header-buttons">
-                <button class="chat-expand" title="Развернуть" type="button" data-chat-expand="" aria-label="Развернуть консультанта">⛶</button>
-                <button class="chat-close" type="button" data-chat-close="" aria-label="Закрыть консультанта">✕</button>
+                <button class="chat-expand" title="Развернуть" type="button" data-chat-expand="" aria-label="Развернуть консультанта"><img src="assets/icons/expand.svg" alt="" aria-hidden="true"></button>
+                <button class="chat-close" type="button" data-chat-close="" aria-label="Закрыть консультанта"><img src="assets/icons/close.svg" alt="" aria-hidden="true"></button>
             </div>
         </div>
         <div class="chat-messages" id="chatMessages" aria-live="polite" aria-relevant="additions">
             <div class="chat-message">
-                <div class="chat-message-avatar">🤖</div>
+                <div class="chat-message-avatar"><img src="assets/icons/bot.svg" alt="" aria-hidden="true"></div>
                 <div class="chat-message-content">
                     <p>Привет! Я виртуальный помощник Алексея. Опишите задачу своими словами — подскажу, какая услуга подойдёт, и подготовлю сообщение для Telegram.</p>
                     <div class="chat-message-time">Сейчас</div>
                 </div>
             </div>
         </div>
-        <div class="chat-quick-actions" id="chatQuickActions" aria-label="Быстрые ответы">
+        <p class="chat-quick-label" id="chatQuickLabel">Выберите, с чего начнём ↓</p>
+        <div class="chat-quick-actions is-fresh" id="chatQuickActions" aria-label="Быстрые ответы">
             <button class="chat-quick-btn" type="button" data-chat-intent="smm">Продвижение</button>
             <button class="chat-quick-btn" type="button" data-chat-intent="ads">Реклама</button>
             <button class="chat-quick-btn" type="button" data-chat-intent="design">Дизайн</button>
@@ -668,9 +669,9 @@
         <p class="chat-privacy-note">Сообщения здесь не отправляются и не сохраняются.</p>
         <form class="chat-input-area" id="chatForm">
             <input type="search" inputmode="text" class="chat-input" id="chatInput" placeholder="Напишите, что нужно сделать..." maxlength="600" aria-label="Сообщение виртуальному помощнику" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="send">
-            <button type="submit" class="chat-send" aria-label="Отправить сообщение помощнику">➤</button>
+            <button type="submit" class="chat-send" aria-label="Отправить сообщение помощнику"><img src="assets/icons/send.svg" alt="" aria-hidden="true"></button>
         </form>
     </div>
-<script src="assets/js/main.js?v=bot-1" defer></script>
+<script src="assets/js/main.js?v=bot-2" defer></script>
 </body>
 </html>

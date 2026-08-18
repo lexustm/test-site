@@ -3,6 +3,7 @@
 
   const TELEGRAM_URL = "https://t.me/smmtotal";
   const VK_URL = "https://vk.com/tot_al";
+  const VK_MESSAGE_URL = "https://vk.me/tot_al";
   const navbar = document.getElementById("navbar");
   const backToTop = document.getElementById("backToTop");
   const menuToggle = document.getElementById("menuToggle");
@@ -12,6 +13,7 @@
   const chatLauncher = document.querySelector("[data-chat-toggle]");
   const chatMessages = document.getElementById("chatMessages");
   const chatQuickActions = document.getElementById("chatQuickActions");
+  const chatQuickLabel = document.getElementById("chatQuickLabel");
   const chatInput = document.getElementById("chatInput");
   const chatForm = document.getElementById("chatForm");
 
@@ -389,6 +391,20 @@
     serviceIds: [],
     workFormat: "",
     timing: "",
+    waitingFor: "",
+  };
+
+  const ICON_PATHS = {
+    bot: "assets/icons/bot.svg",
+    user: "assets/icons/user.svg",
+  };
+
+  const createAvatarIcon = (type) => {
+    const icon = document.createElement("img");
+    icon.src = type === "user" ? ICON_PATHS.user : ICON_PATHS.bot;
+    icon.alt = "";
+    icon.setAttribute("aria-hidden", "true");
+    return icon;
   };
 
   const normalizeText = (text) =>
@@ -406,7 +422,7 @@
 
     const avatar = document.createElement("div");
     avatar.className = "chat-message-avatar";
-    avatar.textContent = type === "user" ? "👤" : "🤖";
+    avatar.appendChild(createAvatarIcon(type));
 
     const content = document.createElement("div");
     content.className = "chat-message-content";
@@ -422,7 +438,25 @@
     return paragraph;
   };
 
-  const appendTelegramReply = (message, draft, linkText = "Открыть Telegram") => {
+  const copyText = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      return copied;
+    }
+  };
+
+  const appendMessengerReply = (message, draft, linkText = "Открыть Telegram") => {
     if (!chatMessages) return;
 
     const wrapper = document.createElement("div");
@@ -430,31 +464,50 @@
 
     const avatar = document.createElement("div");
     avatar.className = "chat-message-avatar";
-    avatar.textContent = "🤖";
+    avatar.appendChild(createAvatarIcon("bot"));
 
     const content = document.createElement("div");
     content.className = "chat-message-content";
     const paragraph = document.createElement("p");
     paragraph.textContent = message;
 
-    const link = document.createElement("a");
-    link.href = `${TELEGRAM_URL}?text=${encodeURIComponent(draft)}`;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.className = "chat-telegram-link";
-    link.textContent = linkText;
+    const actions = document.createElement("div");
+    actions.className = "chat-messenger-actions";
+
+    const telegramLink = document.createElement("a");
+    telegramLink.href = `${TELEGRAM_URL}?text=${encodeURIComponent(draft)}`;
+    telegramLink.target = "_blank";
+    telegramLink.rel = "noopener noreferrer";
+    telegramLink.className = "chat-telegram-link";
+    telegramLink.textContent = linkText;
+
+    const vkLink = document.createElement("a");
+    vkLink.href = VK_MESSAGE_URL;
+    vkLink.target = "_blank";
+    vkLink.rel = "noopener noreferrer";
+    vkLink.className = "chat-vk-link";
+    vkLink.textContent = "Скопировать и открыть ВКонтакте";
 
     const note = document.createElement("small");
     note.className = "chat-draft-note";
-    note.textContent = "Текст откроется как черновик. Отправить его можно только вручную.";
+    note.textContent = "В Telegram текст подставится автоматически. Для ВКонтакте он скопируется — останется вставить его в диалог.";
 
-    content.append(paragraph, link, note);
+    vkLink.addEventListener("click", () => {
+      copyText(draft).then((copied) => {
+        note.textContent = copied
+          ? "Текст скопирован. Вставьте его в открывшийся диалог ВКонтакте."
+          : "Не удалось скопировать текст автоматически. Попробуйте открыть Telegram.";
+      });
+    });
+
+    actions.append(telegramLink, vkLink);
+    content.append(paragraph, actions, note);
     wrapper.append(avatar, content);
     chatMessages.appendChild(wrapper);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   };
 
-  const renderQuickActions = (actions) => {
+  const renderQuickActions = (actions, label = "Выберите вариант ответа ↓") => {
     if (!chatQuickActions) return;
 
     const buttons = actions.map((action) => {
@@ -470,6 +523,18 @@
     });
 
     chatQuickActions.replaceChildren(...buttons);
+    chatQuickActions.classList.remove("is-fresh");
+
+    if (chatQuickLabel) {
+      chatQuickLabel.textContent = label;
+      chatQuickLabel.hidden = actions.length === 0;
+    }
+
+    if (actions.length > 0) {
+      window.requestAnimationFrame(() => {
+        chatQuickActions.classList.add("is-fresh");
+      });
+    }
   };
 
   const joinLabels = (labels) => {
@@ -501,14 +566,17 @@
     }));
 
   const showServiceChoices = () => {
-    renderQuickActions([
-      ...serviceActions(),
-      {
-        label: "Цены",
-        userText: "Сколько стоит работа?",
-        run: showPrices,
-      },
-    ]);
+    renderQuickActions(
+      [
+        ...serviceActions(),
+        {
+          label: "Цены",
+          userText: "Сколько стоит работа?",
+          run: showPrices,
+        },
+      ],
+      "Выберите подходящую услугу ↓",
+    );
   };
 
   const askWorkFormat = () => {
@@ -516,25 +584,29 @@
       .map((id) => serviceById.get(id)?.label)
       .filter(Boolean);
     appendMessage(
-      `Для такой задачи подойдут: ${joinLabels(labels)}. Это разовая работа или нужна помощь на постоянной основе?`,
+      `Для такой задачи подойдут: ${joinLabels(labels)}. Это разовая работа или нужна помощь на постоянной основе? Нажмите подходящий вариант ниже 👇`,
     );
-    renderQuickActions([
-      {
-        label: "Разовая задача",
-        userText: "Разовая задача",
-        run: () => selectWorkFormat("разовая задача"),
-      },
-      {
-        label: "На постоянной основе",
-        userText: "На постоянной основе",
-        run: () => selectWorkFormat("постоянная работа"),
-      },
-      {
-        label: "Пока не знаю",
-        userText: "Пока не знаю",
-        run: () => selectWorkFormat("нужно обсудить"),
-      },
-    ]);
+    chatState.waitingFor = "format";
+    renderQuickActions(
+      [
+        {
+          label: "Разовая задача",
+          userText: "Разовая задача",
+          run: () => selectWorkFormat("разовая задача"),
+        },
+        {
+          label: "На постоянной основе",
+          userText: "На постоянной основе",
+          run: () => selectWorkFormat("постоянная работа"),
+        },
+        {
+          label: "Пока не знаю",
+          userText: "Пока не знаю",
+          run: () => selectWorkFormat("нужно обсудить"),
+        },
+      ],
+      "Выберите формат работы ↓",
+    );
   };
 
   function selectTask(task, serviceIds) {
@@ -542,29 +614,34 @@
     chatState.serviceIds = [...new Set(serviceIds)];
     chatState.workFormat = "";
     chatState.timing = "";
+    chatState.waitingFor = "";
     askWorkFormat();
   }
 
   const selectWorkFormat = (workFormat) => {
     chatState.workFormat = workFormat;
-    appendMessage("Когда хотелось бы начать?");
-    renderQuickActions([
-      {
-        label: "Как можно скорее",
-        userText: "Как можно скорее",
-        run: () => finishBrief("как можно скорее"),
-      },
-      {
-        label: "В течение месяца",
-        userText: "В течение месяца",
-        run: () => finishBrief("в течение месяца"),
-      },
-      {
-        label: "Срок не горит",
-        userText: "Срок не горит",
-        run: () => finishBrief("срок не горит"),
-      },
-    ]);
+    chatState.waitingFor = "timing";
+    appendMessage("Когда хотелось бы начать? Нажмите один из вариантов ниже 👇");
+    renderQuickActions(
+      [
+        {
+          label: "Как можно скорее",
+          userText: "Как можно скорее",
+          run: () => finishBrief("как можно скорее"),
+        },
+        {
+          label: "В течение месяца",
+          userText: "В течение месяца",
+          run: () => finishBrief("в течение месяца"),
+        },
+        {
+          label: "Срок не горит",
+          userText: "Срок не горит",
+          run: () => finishBrief("срок не горит"),
+        },
+      ],
+      "Выберите желаемый срок ↓",
+    );
   };
 
   const resetBrief = () => {
@@ -572,6 +649,7 @@
     chatState.serviceIds = [];
     chatState.workFormat = "";
     chatState.timing = "";
+    chatState.waitingFor = "";
     appendMessage("Хорошо. Напишите новую задачу или выберите направление ниже.");
     showServiceChoices();
     chatInput?.focus();
@@ -579,6 +657,7 @@
 
   const finishBrief = (timing) => {
     chatState.timing = timing;
+    chatState.waitingFor = "";
     const labels = chatState.serviceIds
       .map((id) => serviceById.get(id)?.label)
       .filter(Boolean);
@@ -593,18 +672,21 @@
       "Подскажите, пожалуйста, сможете помочь?",
     ].join("\n");
 
-    appendTelegramReply(
+    appendMessengerReply(
       "Готово. Собрал короткое сообщение, чтобы не пришлось повторять всё заново.",
       draft,
       "Открыть Telegram с сообщением",
     );
-    renderQuickActions([
-      {
-        label: "Обсудить другую задачу",
-        userText: "Хочу обсудить другую задачу",
-        run: resetBrief,
-      },
-    ]);
+    renderQuickActions(
+      [
+        {
+          label: "Обсудить другую задачу",
+          userText: "Хочу обсудить другую задачу",
+          run: resetBrief,
+        },
+      ],
+      "Хотите начать заново? ↓",
+    );
   };
 
   function showPrices(showChoices = true) {
@@ -647,7 +729,7 @@
     }
     if (/контакт|связ|телеграм|telegram|вконтакте|написать алексе/.test(normalized)) {
       const draft = "Здравствуйте! Пишу с сайта VIBELINK. Хочу обсудить задачу.";
-      appendTelegramReply("Связаться с Алексеем можно в Telegram.", draft);
+      appendMessengerReply("Связаться с Алексеем можно в Telegram или ВКонтакте.", draft);
       if (showChoices) showServiceChoices();
       return true;
     }
@@ -667,6 +749,37 @@
       answerGeneralQuestion(cleanMessage, false);
       selectTask(cleanMessage, matchedServices);
       return;
+    }
+
+    const normalizedMessage = normalizeText(cleanMessage);
+    if (chatState.waitingFor === "format") {
+      if (/разов|один раз|однократ/.test(normalizedMessage)) {
+        selectWorkFormat("разовая задача");
+        return;
+      }
+      if (/постоян|регуляр|ежемесяч/.test(normalizedMessage)) {
+        selectWorkFormat("постоянная работа");
+        return;
+      }
+      if (/не знаю|обсуд|не уверен/.test(normalizedMessage)) {
+        selectWorkFormat("нужно обсудить");
+        return;
+      }
+    }
+
+    if (chatState.waitingFor === "timing") {
+      if (/не горит|не сроч|без спеш|позже/.test(normalizedMessage)) {
+        finishBrief("срок не горит");
+        return;
+      }
+      if (/сроч|скорее|сейчас|сегодня|завтра/.test(normalizedMessage)) {
+        finishBrief("как можно скорее");
+        return;
+      }
+      if (/месяц|недел/.test(normalizedMessage)) {
+        finishBrief("в течение месяца");
+        return;
+      }
     }
 
     if (answerGeneralQuestion(cleanMessage)) return;
@@ -694,6 +807,7 @@
   document.querySelector('[data-chat-action="other"]')?.addEventListener("click", () => {
     appendMessage("Другая задача", "user");
     appendMessage("Расскажите своими словами, что нужно получить в итоге.");
+    chatState.waitingFor = "";
     renderQuickActions([]);
     chatInput?.focus();
   });
