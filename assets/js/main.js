@@ -23,6 +23,9 @@
   document.querySelectorAll('.protected-link[data-valid="vk"]').forEach((link) => {
     link.href = VK_URL;
   });
+  document.querySelectorAll("[data-current-year]").forEach((year) => {
+    year.textContent = String(new Date().getFullYear());
+  });
 
   const preloader = document.getElementById("preloader");
   const progressBar = document.getElementById("progressBar");
