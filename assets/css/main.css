@@ -877,3 +877,328 @@ body{font-family:var(--font-body)}
     font-size:.94rem;
   }
 }
+
+/* Единый финальный блок связи вместо двух повторяющихся секций. */
+.contact-section.contact-final{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  padding:7.5rem 5%;
+  border-top:1px solid rgba(196,181,253,.1);
+  background:
+    radial-gradient(circle at 78% 22%,rgba(124,58,237,.2),transparent 30%),
+    radial-gradient(circle at 14% 88%,rgba(91,33,182,.15),transparent 32%),
+    linear-gradient(150deg,#110b23 0%,#18102e 48%,#0f0a1f 100%);
+}
+.contact-final::before,
+.contact-final::after{
+  position:absolute;
+  z-index:-1;
+  border-radius:50%;
+  content:'';
+  pointer-events:none;
+}
+.contact-final::before{
+  top:-13rem;
+  right:-8rem;
+  width:35rem;
+  height:35rem;
+  border:1px solid rgba(167,139,250,.09);
+  box-shadow:0 0 110px rgba(124,58,237,.08),inset 0 0 100px rgba(124,58,237,.04);
+}
+.contact-final::after{
+  bottom:-12rem;
+  left:-9rem;
+  width:30rem;
+  height:30rem;
+  background:radial-gradient(circle,rgba(124,58,237,.1),transparent 68%);
+}
+.contact-panel{
+  position:relative;
+  max-width:1280px;
+  margin:0 auto;
+  padding:4.5rem;
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:5rem;
+  align-items:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:40px;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  -webkit-backdrop-filter:blur(24px) saturate(130%);
+  backdrop-filter:blur(24px) saturate(130%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 34px 90px rgba(4,2,12,.32),0 0 44px rgba(124,58,237,.09);
+}
+.contact-panel::before{
+  position:absolute;
+  top:-55%;
+  right:-12%;
+  width:62%;
+  height:150%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,.13),transparent 65%);
+  content:'';
+  pointer-events:none;
+}
+.contact-copy,
+.contact-actions{
+  position:relative;
+  z-index:1;
+}
+.contact-copy .section-badge{
+  margin-bottom:1.4rem;
+  border:1px solid rgba(196,181,253,.18);
+  background:rgba(124,58,237,.18);
+  color:var(--accent-light);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.contact-copy h2{
+  max-width:560px;
+  margin-bottom:1.5rem;
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:3.35rem;
+  font-weight:800;
+  letter-spacing:-1px;
+  line-height:1.12;
+}
+.contact-lead{
+  max-width:560px;
+  margin-bottom:2rem;
+  color:rgba(255,255,255,.66);
+  font-size:1.08rem;
+  line-height:1.75;
+}
+.contact-note{
+  max-width:560px;
+  display:flex;
+  align-items:flex-start;
+  gap:.75rem;
+  color:rgba(255,255,255,.48);
+  font-size:.88rem;
+  line-height:1.6;
+}
+.contact-note-dot{
+  width:9px;
+  height:9px;
+  margin-top:.36rem;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:#10b981;
+  box-shadow:0 0 0 5px rgba(16,185,129,.09),0 0 18px rgba(16,185,129,.32);
+}
+.contact-actions{
+  display:grid;
+  gap:1rem;
+}
+.contact-messengers{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1rem;
+}
+.contact-action{
+  width:100%;
+  min-width:0;
+  min-height:100px;
+  padding:1.25rem 1.35rem;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  gap:1rem;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 16px 36px rgba(4,2,12,.16);
+  font-family:var(--font-display);
+  text-align:left;
+  text-decoration:none;
+  cursor:pointer;
+  appearance:none;
+  transition:transform .45s cubic-bezier(.4,0,.2,1),border-color .45s,background .45s,box-shadow .45s;
+}
+.contact-action:hover{
+  border-color:rgba(196,181,253,.3);
+  background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.04));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 24px 52px rgba(4,2,12,.26),0 0 28px rgba(124,58,237,.1);
+  transform:translateY(-4px);
+}
+.contact-action:focus-visible{
+  outline:2px solid var(--accent-light);
+  outline-offset:4px;
+}
+.contact-action-chat{
+  min-height:116px;
+  border-color:rgba(196,181,253,.34);
+  background:
+    radial-gradient(circle at 82% 15%,rgba(255,255,255,.13),transparent 32%),
+    linear-gradient(135deg,rgba(91,33,182,.96),rgba(124,58,237,.94) 55%,rgba(139,92,246,.9));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 22px 55px rgba(76,29,149,.34),0 0 32px rgba(124,58,237,.18);
+}
+.contact-action-chat:hover{
+  border-color:rgba(255,255,255,.42);
+  background:
+    radial-gradient(circle at 82% 15%,rgba(255,255,255,.19),transparent 34%),
+    linear-gradient(135deg,#5b21b6,#7c3aed 55%,#8b5cf6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.23),0 28px 68px rgba(76,29,149,.42),0 0 44px rgba(139,92,246,.24);
+}
+.contact-action-icon{
+  width:58px;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 12px 24px rgba(4,2,12,.2);
+}
+.contact-action-icon img{
+  width:30px;
+  height:30px;
+  display:block;
+}
+.contact-action-icon-chat{
+  width:66px;
+  height:66px;
+  border-radius:20px;
+  background:rgba(255,255,255,.14);
+}
+.contact-action-icon-chat img{
+  width:36px;
+  height:36px;
+}
+.contact-action-icon-tg{
+  background:linear-gradient(135deg,#168acd,#2aabee);
+}
+.contact-action-icon-vk{
+  background:linear-gradient(135deg,#1668c7,#2787f5);
+}
+.contact-action-content{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:.2rem;
+}
+.contact-action-content strong{
+  color:#fff;
+  font-size:1.04rem;
+  font-weight:700;
+  line-height:1.35;
+}
+.contact-action-chat .contact-action-content strong{
+  font-size:1.22rem;
+}
+.contact-action-content small{
+  color:rgba(255,255,255,.56);
+  font-family:var(--font-body);
+  font-size:.78rem;
+  line-height:1.4;
+}
+.contact-action-chat .contact-action-content small{
+  color:rgba(255,255,255,.72);
+}
+.contact-action-arrow{
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.78);
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  transition:transform .45s,background .45s,color .45s;
+}
+.contact-action:hover .contact-action-arrow{
+  background:rgba(255,255,255,.13);
+  color:#fff;
+  transform:translateX(3px);
+}
+@media(max-width:1100px){
+  .contact-panel{
+    gap:3rem;
+    padding:3.5rem;
+  }
+  .contact-copy h2{
+    font-size:2.8rem;
+  }
+  .contact-messengers{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:850px){
+  .contact-section.contact-final{
+    padding:5rem 5%;
+  }
+  .contact-panel{
+    grid-template-columns:1fr;
+    gap:3rem;
+    text-align:center;
+  }
+  .contact-copy h2,
+  .contact-lead,
+  .contact-note{
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .contact-note{
+    justify-content:center;
+    text-align:left;
+  }
+  .contact-messengers{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:620px){
+  .contact-section.contact-final{
+    padding:4rem 5%;
+  }
+  .contact-panel{
+    gap:2.5rem;
+    padding:2rem 1.25rem;
+    border-radius:28px;
+  }
+  .contact-copy h2{
+    font-size:2rem;
+    letter-spacing:-.5px;
+  }
+  .contact-lead{
+    font-size:.96rem;
+  }
+  .contact-note{
+    font-size:.8rem;
+  }
+  .contact-messengers{
+    grid-template-columns:1fr;
+  }
+  .contact-action,
+  .contact-action-chat{
+    min-height:92px;
+    padding:1rem;
+    gap:.8rem;
+    border-radius:20px;
+  }
+  .contact-action-icon,
+  .contact-action-icon-chat{
+    width:52px;
+    height:52px;
+    border-radius:16px;
+  }
+  .contact-action-icon img,
+  .contact-action-icon-chat img{
+    width:28px;
+    height:28px;
+  }
+  .contact-action-content strong,
+  .contact-action-chat .contact-action-content strong{
+    font-size:1rem;
+  }
+  .contact-action-arrow{
+    width:34px;
+    height:34px;
+  }
+}
