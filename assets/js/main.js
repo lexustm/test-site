@@ -257,8 +257,37 @@
     }
   };
 
+  const pricingFormats = {
+    "one-time": {
+      userText: "Интересует разовая задача",
+      workFormat: "разовая задача",
+      reply: "Хорошо. Коротко опишите, что нужно сделать и какой результат хотите получить.",
+    },
+    support: {
+      userText: "Интересует постоянное сопровождение",
+      workFormat: "постоянное сопровождение",
+      reply: "Отлично. Расскажите, какие задачи появляются регулярно и с чем нужна помощь в течение месяца.",
+    },
+    turnkey: {
+      userText: "Интересует проект под ключ",
+      workFormat: "проект под ключ",
+      reply: "Хорошо. Расскажите, что нужно запустить и какие направления хотите объединить в одном проекте.",
+    },
+  };
+
   document.querySelectorAll("[data-chat-open]").forEach((button) => {
-    button.addEventListener("click", () => setChat(true));
+    button.addEventListener("click", () => {
+      setChat(true);
+      const format = pricingFormats[button.getAttribute("data-chat-format")];
+      if (!format) return;
+
+      chatState.preselectedFormat = format.workFormat;
+      appendMessage(format.userText, "user");
+      appendMessage(format.reply);
+      renderQuickActions([]);
+      chatState.waitingFor = "";
+      window.setTimeout(() => chatInput?.focus(), 120);
+    });
   });
 
   chatLauncher?.addEventListener("click", () => {
@@ -450,6 +479,7 @@
     workFormat: "",
     timing: "",
     waitingFor: "",
+    preselectedFormat: "",
   };
 
   const ICON_PATHS = {
@@ -655,7 +685,12 @@
         {
           label: "На постоянной основе",
           userText: "На постоянной основе",
-          run: () => selectWorkFormat("постоянная работа"),
+          run: () => selectWorkFormat("постоянное сопровождение"),
+        },
+        {
+          label: "Проект под ключ",
+          userText: "Проект под ключ",
+          run: () => selectWorkFormat("проект под ключ"),
         },
         {
           label: "Пока не знаю",
@@ -668,12 +703,18 @@
   };
 
   function selectTask(task, serviceIds) {
+    const preselectedFormat = chatState.preselectedFormat;
     chatState.task = task.slice(0, 600);
     chatState.serviceIds = [...new Set(serviceIds)];
-    chatState.workFormat = "";
+    chatState.workFormat = preselectedFormat;
     chatState.timing = "";
     chatState.waitingFor = "";
-    askWorkFormat();
+    chatState.preselectedFormat = "";
+    if (preselectedFormat) {
+      selectWorkFormat(preselectedFormat);
+    } else {
+      askWorkFormat();
+    }
   }
 
   const selectWorkFormat = (workFormat) => {
@@ -708,6 +749,7 @@
     chatState.workFormat = "";
     chatState.timing = "";
     chatState.waitingFor = "";
+    chatState.preselectedFormat = "";
     appendMessage("Хорошо. Напишите новую задачу или выберите направление ниже.");
     showServiceChoices();
     chatInput?.focus();
@@ -749,7 +791,7 @@
 
   function showPrices(showChoices = true) {
     appendMessage(
-      "На сайте есть ориентиры: разовая задача - от 5 000 ₽, пакет услуг - от 20 000 ₽ в месяц, консультация - 3 000 ₽. Точная сумма зависит от объёма.",
+      "Стоимость зависит от объёма и состава работы. Для разовой задачи и проекта под ключ сумму называю до начала, а для постоянного сопровождения заранее фиксируем объём и стоимость на месяц.",
     );
     if (showChoices) {
       appendMessage("Что нужно сделать?");
@@ -778,9 +820,9 @@
       if (showChoices) showServiceChoices();
       return true;
     }
-    if (/разов|постоян|ежемесяч|формат работ/.test(normalized)) {
+    if (/разов|постоян|сопровожд|ежемесяч|под ключ|формат работ/.test(normalized)) {
       appendMessage(
-        "Можно заказать одну конкретную задачу или договориться о регулярной работе. Формат лучше выбирать после короткого обсуждения объёма.",
+        "Можно заказать одну конкретную задачу, договориться о постоянном сопровождении или собрать проект под ключ. Формат лучше выбирать после короткого обсуждения объёма.",
       );
       if (showChoices) showServiceChoices();
       return true;
@@ -886,14 +928,23 @@
           const y = event.clientY - rect.top;
           const rotateX = (y - rect.height / 2) / 25;
           const rotateY = (rect.width / 2 - x) / 25;
+          const featuredLift =
+            card.classList.contains("featured") &&
+            window.matchMedia("(min-width: 1201px)").matches
+              ? -10
+              : 0;
           card.style.transition = "transform 0.15s ease-out";
-          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${featuredLift - 5}px)`;
         });
 
         card.addEventListener("mouseleave", () => {
+          const featuredLift =
+            card.classList.contains("featured") &&
+            window.matchMedia("(min-width: 1201px)").matches
+              ? -10
+              : 0;
           card.style.transition = "transform 0.6s ease-out";
-          card.style.transform =
-            "perspective(1000px) rotateX(0) rotateY(0) translateY(0)";
+          card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) translateY(${featuredLift}px)`;
         });
       });
   }
