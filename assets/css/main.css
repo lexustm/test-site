@@ -488,3 +488,23 @@ body{font-family:var(--font-body)}
   .result-icon{width:120px;height:120px}
   .result-title{max-width:100%}
 }
+
+/* Исправления для ноутбуков с небольшой рабочей высотой экрана. */
+@media(min-width:769px){
+  .hero{
+    padding-top:8.5rem;
+  }
+}
+
+/* Открытый чат должен находиться выше фиксированного меню. */
+.chat-overlay{
+  z-index:1100;
+}
+.chat-window,
+.chat-window.active,
+.chat-window.expanded{
+  z-index:1101;
+}
+.chat-widget{
+  z-index:1102;
+}
