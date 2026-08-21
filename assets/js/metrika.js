@@ -73,28 +73,41 @@
     banner.setAttribute("data-cookie-consent", "");
     banner.setAttribute("aria-label", "Настройки файлов cookie");
     banner.innerHTML = `
+      <div class="cookie-consent-icon" aria-hidden="true">
+        <svg viewBox="0 0 96 96" focusable="false">
+          <defs>
+            <linearGradient id="cookie-fill" x1="18" y1="15" x2="78" y2="82" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#f6c768"/>
+              <stop offset="1" stop-color="#d98935"/>
+            </linearGradient>
+            <filter id="cookie-glow" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#7c3aed" flood-opacity=".34"/>
+            </filter>
+            <mask id="cookie-bite">
+              <rect width="96" height="96" fill="#fff"/>
+              <circle cx="78" cy="18" r="10" fill="#000"/>
+              <circle cx="86" cy="31" r="9" fill="#000"/>
+              <circle cx="73" cy="5" r="7" fill="#000"/>
+            </mask>
+          </defs>
+          <circle cx="48" cy="49" r="36" fill="url(#cookie-fill)" mask="url(#cookie-bite)" filter="url(#cookie-glow)"/>
+          <circle cx="35" cy="34" r="4.4" fill="#774120"/>
+          <circle cx="56" cy="29" r="3.6" fill="#774120"/>
+          <circle cx="61" cy="51" r="4.8" fill="#774120"/>
+          <circle cx="36" cy="58" r="3.7" fill="#774120"/>
+          <circle cx="50" cy="69" r="3.2" fill="#774120"/>
+          <path d="M27 45c3 2 5 2 8 0M45 43c2 2 4 2 6 0" fill="none" stroke="#bd742f" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>
+        </svg>
+      </div>
       <div class="cookie-consent-copy">
-        <h2>Файлы cookie и аналитика</h2>
-        <p>Сайт использует Яндекс Метрику и Вебвизор, чтобы понимать поведение посетителей и улучшать страницы. Аналитика запустится только с вашего согласия.</p>
-        <button class="cookie-consent-details-toggle" type="button" aria-expanded="false">Что собирается</button>
-        <div class="cookie-consent-details" hidden>
-          <p>Метрика может получать технические сведения об устройстве и браузере, источник перехода, просмотренные страницы, клики и прокрутку. Содержимое сообщений в чат-боте скрыто от записи Вебвизора.</p>
-          <a href="https://yandex.ru/support/metrica/ru/general/confidential-data" target="_blank" rel="noopener noreferrer">Конфиденциальность в Яндекс Метрике</a>
-        </div>
+        <h2>Сайту тоже нужны печеньки</h2>
+        <p>Используем cookie, чтобы VIBELINK чувствовал себя хорошо, не болел и становился удобнее.</p>
       </div>
       <div class="cookie-consent-actions">
-        <button class="cookie-consent-accept" type="button">Разрешить</button>
-        <button class="cookie-consent-reject" type="button">Только необходимые</button>
+        <button class="cookie-consent-accept" type="button">Угостить сайт</button>
+        <button class="cookie-consent-reject" type="button">Без печенек</button>
       </div>
     `;
-
-    banner.querySelector(".cookie-consent-details-toggle")?.addEventListener("click", (event) => {
-      const button = event.currentTarget;
-      const details = banner.querySelector(".cookie-consent-details");
-      const open = button.getAttribute("aria-expanded") !== "true";
-      button.setAttribute("aria-expanded", String(open));
-      if (details) details.hidden = !open;
-    });
 
     banner.querySelector(".cookie-consent-accept")?.addEventListener("click", () => {
       saveConsent("accepted");
