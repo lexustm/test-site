@@ -1,7 +1,7 @@
 {
-  "name": "VIBELINK - Digital-маркетолог Алексей",
+  "name": "VIBELINK - сайты и digital-услуги",
   "short_name": "VIBELINK",
-  "description": "Комплексный digital-маркетинг: SMM, реклама, дизайн, видео, чат-боты, SEO и аналитика",
+  "description": "Создание сайтов, реклама, SMM, дизайн, тексты, SEO, аналитика и чат-боты",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

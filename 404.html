@@ -3,21 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#7c3aed">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f0a1f">
   <title>Страница не найдена - VIBELINK</title>
-  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/main.css?v=pricing-formats-1">
+  <link rel="stylesheet" href="/assets/css/service-page.css?v=seo-1">
 </head>
-<body class="error-page">
-  <main>
-    <div class="error-code" aria-hidden="true">404</div>
-    <h1>Страница не найдена</h1>
-    <p>Возможно, ссылка устарела или адрес введён с ошибкой.</p>
-    <a class="btn btn-primary" href="./">Вернуться на главную</a>
+<body class="sp-error-page">
+  <main class="sp-contact" aria-labelledby="notFoundTitle">
+    <div class="sp-container">
+      <div class="sp-contact-panel">
+        <div>
+          <span class="sp-section-label">Ошибка 404</span>
+          <h1 id="notFoundTitle">Такой страницы нет</h1>
+          <p>Возможно, адрес изменился или в ссылке допущена ошибка. На главной странице собраны все направления работы и контакты.</p>
+        </div>
+        <div class="sp-contact-actions">
+          <a class="sp-btn sp-btn-primary" href="/">Вернуться на главную <span aria-hidden="true">→</span></a>
+          <a class="sp-btn" href="/#services">Посмотреть услуги</a>
+        </div>
+      </div>
+    </div>
   </main>
 </body>
 </html>
