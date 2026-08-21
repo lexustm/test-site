@@ -41,6 +41,8 @@
 @media (max-width:768px){
   .chat-quick-actions{max-height:132px}
   .chat-privacy-note{padding-bottom:.55rem}
+  .chat-input{font-size:16px}
+  .chat-window.active{height:100dvh;max-height:100dvh}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}

@@ -4,6 +4,10 @@
   const TELEGRAM_URL = "https://t.me/smmtotal";
   const VK_URL = "https://vk.com/tot_al";
   const VK_MESSAGE_URL = "https://vk.me/tot_al";
+  const METRIKA_ID = 111842715;
+  const reachGoal = (goal) => {
+    if (typeof window.ym === "function") window.ym(METRIKA_ID, "reachGoal", goal);
+  };
   const navbar = document.getElementById("navbar");
   const backToTop = document.getElementById("backToTop");
   const menuToggle = document.getElementById("menuToggle");
@@ -245,6 +249,7 @@
   const setChat = (open) => {
     if (!chatWindow || !chatOverlay) return;
 
+    const wasOpen = chatWindow.classList.contains("active");
     chatWindow.classList.toggle("active", open);
     chatOverlay.classList.toggle("active", open);
     chatWindow.setAttribute("aria-hidden", String(!open));
@@ -252,6 +257,7 @@
     document.body.style.overflow = open ? "hidden" : "";
 
     if (open) {
+      if (!wasOpen) reachGoal("chat_open");
       returnFocusTo = document.activeElement;
       window.setTimeout(() => chatInput?.focus(), 100);
     } else {
@@ -571,6 +577,7 @@
     telegramLink.rel = "noopener noreferrer";
     telegramLink.className = "chat-telegram-link";
     telegramLink.textContent = linkText;
+    telegramLink.addEventListener("click", () => reachGoal("chat_telegram"));
 
     const vkLink = document.createElement("a");
     vkLink.href = VK_MESSAGE_URL;
@@ -584,6 +591,7 @@
     note.textContent = "В Telegram текст подставится автоматически. Для ВКонтакте он скопируется - останется вставить его в диалог.";
 
     vkLink.addEventListener("click", () => {
+      reachGoal("chat_vk");
       copyText(draft).then((copied) => {
         note.textContent = copied
           ? "Текст скопирован. Вставьте его в открывшийся диалог ВКонтакте."
@@ -896,6 +904,15 @@
   chatForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     processMessage(chatInput?.value || "");
+  });
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a");
+    if (!link) return;
+
+    if (link.matches('.protected-link[data-valid="tg"]')) reachGoal("contact_telegram");
+    if (link.matches('.protected-link[data-valid="vk"]')) reachGoal("contact_vk");
+    if (link.getAttribute("href") === "#contact") reachGoal("contact_section");
   });
 
   document.querySelectorAll("[data-chat-intent]").forEach((button) => {
