@@ -39,14 +39,14 @@ function enc(mixed $data): string { return json_encode($data, JSON_UNESCAPED_UNI
 function h(mixed $s): string { return htmlspecialchars((string)$s,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8'); }
 function text_value(mixed $s, int $max): string { if (!is_string($s) || !preg_match('//u',$s) || strlen($s)>$max) fail(400,'Некорректный текст.');return trim($s); }
 function transaction(callable $f): mixed { db()->beginTransaction();try {$v=$f();db()->commit();return $v;}catch(Throwable $e){if(db()->inTransaction())db()->rollBack();throw $e;} }
-function key(): string {
+function secret_key(): string {
     $path=VL_PRIVATE.'/key.bin';
     if(!is_file($path)){ $fd=@fopen($path,'x+b');if($fd){chmod($path,0600);fwrite($fd,random_bytes(32));fflush($fd);fclose($fd);} }
     $v=file_get_contents($path);if(strlen($v)!==32)throw new RuntimeException('Ключ шифрования поврежден.');return $v;
 }
-function seal(string $s): string { $n=random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);return base64_encode($n.sodium_crypto_secretbox($s,$n,key())); }
-function unseal(string $s): string { $b=base64_decode($s,true);if(!$b)throw new RuntimeException('Ошибка секрета.');$v=sodium_crypto_secretbox_open(substr($b,24),substr($b,0,24),key());if($v===false)throw new RuntimeException('Ошибка ключа.');return $v; }
-function audit(string $action, array $detail = []): void { query('INSERT INTO vl_audit(action,detail,ip_hash) VALUES(?,?,?)',[$action,enc($detail),hash_hmac('sha256',$_SERVER['REMOTE_ADDR']??'cli',key())]); }
+function seal(string $s): string { $n=random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);return base64_encode($n.sodium_crypto_secretbox($s,$n,secret_key())); }
+function unseal(string $s): string { $b=base64_decode($s,true);if(!$b)throw new RuntimeException('Ошибка секрета.');$v=sodium_crypto_secretbox_open(substr($b,24),substr($b,0,24),secret_key());if($v===false)throw new RuntimeException('Ошибка ключа.');return $v; }
+function audit(string $action, array $detail = []): void { query('INSERT INTO vl_audit(action,detail,ip_hash) VALUES(?,?,?)',[$action,enc($detail),hash_hmac('sha256',$_SERVER['REMOTE_ADDR']??'cli',secret_key())]); }
 function session_boot(): void {
     ini_set('session.save_handler','files');ini_set('session.use_strict_mode','1');ini_set('session.use_only_cookies','1');ini_set('session.use_trans_sid','0');
     session_save_path(VL_PRIVATE.'/sessions');session_name(test_mode()?'vibelink_test':'__Host-vibelink');
@@ -65,7 +65,7 @@ function owner(): array {
     $_SESSION['last']=$now;return $u;
 }
 function throttle(string $kind): string {
-    $ip=hash_hmac('sha256',$kind.'|'.($_SERVER['REMOTE_ADDR']??'cli'),key());
+    $ip=hash_hmac('sha256',$kind.'|'.($_SERVER['REMOTE_ADDR']??'cli'),secret_key());
     query('INSERT IGNORE INTO vl_attempts(id,window_at) VALUES(?,?)',[$ip,time()]);
     $a=query('SELECT * FROM vl_attempts WHERE id=?',[$ip])->fetch();if((int)$a['until_at']>time())fail(429,'Слишком много попыток. Попробуйте через 15 минут.');
     query('UPDATE vl_attempts SET count=IF(window_at<? ,1,count+1),window_at=IF(window_at<? ,?,window_at) WHERE id=?',[time()-900,time()-900,time(),$ip]);
