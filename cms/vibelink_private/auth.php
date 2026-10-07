@@ -15,7 +15,9 @@ function login_session(array $u): void { session_regenerate_id(true);$_SESSION=[
 function reauth(array $a): array { $u=query('SELECT * FROM vl_users WHERE id=1 FOR UPDATE')->fetch();if(!password_verify($a['password']??'',$u['password'])||!verify_factor($u,$a['code']??''))fail(401,'Пароль или одноразовый код неверен.');return $u; }
 function install_schema(): void { foreach(explode(';',file_get_contents(VL_PRIVATE.'/schema.sql')) as $sql)if(trim($sql)!=='')db()->exec($sql); }
 function seed(): void {
-    $path=VL_PRIVATE.'/seed.json';$raw=is_file($path)?file_get_contents($path):gzdecode(file_get_contents($path.'.gz'));$s=json_decode($raw,true,64,JSON_THROW_ON_ERROR);
+    $path=VL_PRIVATE.'/seed.json';
+    if(is_dir(VL_PRIVATE.'/seed-pages')){$s=['pages'=>[],'media'=>[]];foreach(glob(VL_PRIVATE.'/seed-pages/*.json') as $f)$s['pages'][]=json_decode(file_get_contents($f),true,64,JSON_THROW_ON_ERROR);}
+    else{$raw=is_file($path)?file_get_contents($path):gzdecode(file_get_contents($path.'.gz'));$s=json_decode($raw,true,64,JSON_THROW_ON_ERROR);}
     $ids=[];foreach($s['pages'] as $p){$data=enc($p['data']);query('INSERT INTO vl_pages(name,route,draft,published) VALUES(?,?,?,?)',[$p['name'],$p['route'],$data,$data]);$ids[$p['route']]=(int)db()->lastInsertId();}
     query("INSERT INTO vl_menu(label,url,position) VALUES('Услуги','/#services',0)");$parent=(int)db()->lastInsertId();$i=0;
     foreach($s['pages'] as $p)if(!in_array($p['route'],['/','/404.html','/krupny-text-privacy/','/produkty/'],true))query('INSERT INTO vl_menu(parent_id,page_id,label,position) VALUES(?,?,?,?)',[$parent,$ids[$p['route']],$p['name'],$i++]);
@@ -43,7 +45,7 @@ function auth_api(string $action, array $a): never {
     }
     owner();
     if(in_array($action,['security-start','password','recovery','logout-all'],true))throttle('reauth');
-    if($action==='logout'){audit('logout');$_SESSION=[];session_destroy();json_out(['ok'=>true]);}
+    if($action==='logout'){audit('logout');$_SESSION=['csrf'=>bin2hex(random_bytes(32))];session_regenerate_id(true);json_out(['ok'=>true,'csrf'=>$_SESSION['csrf']]);}
     if($action==='security-start'){transaction(function()use($a){reauth($a);});$_SESSION['new_secret']=b32(random_bytes(20));$_SESSION['new_until']=time()+600;json_out(['secret'=>$_SESSION['new_secret'],'uri'=>'otpauth://totp/VIBELINK:owner?secret='.$_SESSION['new_secret'].'&issuer=VIBELINK']);}
     if($action==='security-finish'){
         if(($_SESSION['new_until']??0)<time())fail(403,'Время замены TOTP истекло.');$step=valid_step($_SESSION['new_secret'],$a['new_code']??'');if($step<0)fail(400,'Новый TOTP неверен.');

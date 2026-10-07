@@ -36,7 +36,7 @@ function files_api(string $action,array $a): never {
         }finally{flock($fd,LOCK_UN);fclose($fd);}
     }
     if(in_array($action,['file-trash','file-restore'],true)){
-        $moved=false;$from='';$to='';db()->beginTransaction();try{$f=file_row((int)($a['id']??0),true);$dest=safe_path($f['path']);
+        $moved=false;$from='';$to='';db()->beginTransaction();try{query('SELECT id FROM vl_users WHERE id=1 FOR UPDATE');$f=file_row((int)($a['id']??0),true);$dest=safe_path($f['path']);
             if($action==='file-trash'){if($f['trash'])fail(409,'Уже в корзине.');$token=bin2hex(random_bytes(24));$from=$dest;$to=VL_PRIVATE.'/trash/'.$token;if(!is_file($from))fail(404,'Файл отсутствует на диске.');}
             else{if(!$f['trash'])fail(409,'Файл не в корзине.');$token=null;$from=VL_PRIVATE.'/trash/'.$f['trash'];$to=$dest;if(is_file($to))fail(409,'По этому адресу уже есть другой файл.');if(!is_dir(dirname($to)))mkdir(dirname($to),0755,true);}
             if(!rename($from,$to))throw new RuntimeException('Ошибка перемещения файла.');$moved=true;chmod($to,$token?0600:0644);query('UPDATE vl_files SET trash=? WHERE id=?',[$token,$f['id']]);audit($action,['path'=>$f['path']]);db()->commit();

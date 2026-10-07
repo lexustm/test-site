@@ -1,0 +1,15 @@
+{
+  "route": "/produkty/",
+  "name": "Продукты",
+  "data": {
+    "title": "Продукты VIBELINK",
+    "description": "Приложения и сервисы VIBELINK",
+    "html": "<main class=\"products\"><p class=\"eyebrow\">VIBELINK PRODUCTS</p><h1>Полезные продукты.<br>Для обычных задач.</h1><article><div class=\"product-icon\">Aa</div><div><h2>Крупный текст</h2><p>Покажите сообщение крупно на экране телефона.</p><a class=\"product-button\" href=\"https://www.rustore.ru/catalog/app/com.vibelink.bigtext\" target=\"_blank\" rel=\"noopener\">Открыть в RuStore</a><p><a href=\"/krupny-text-privacy/\">Политика конфиденциальности</a></p></div></article></main>",
+    "css": ".products{max-width:1100px;margin:0 auto;padding:90px 24px;color:#202335}.products h1{font-size:clamp(36px,6vw,64px);line-height:1.1;letter-spacing:-2px}.eyebrow{color:#6d37e5;font-weight:800;letter-spacing:3px}.products article{display:flex;gap:32px;border:1px solid #e4e6ee;border-radius:28px;padding:36px;margin-top:48px;background:#fff}.product-icon{display:grid;place-items:center;flex:0 0 112px;height:112px;border-radius:28px;background:#6d37e5;color:white;font-size:48px;font-weight:800}.product-button{display:inline-block;background:#6d37e5;color:white!important;padding:14px 22px;border-radius:14px;text-decoration:none}.products a{color:#6d37e5}@media(max-width:600px){.products article{flex-direction:column}}",
+    "js": "",
+    "dependencies": [],
+    "jsonld": [],
+    "body_id": "",
+    "noindex": false
+  }
+}

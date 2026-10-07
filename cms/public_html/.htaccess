@@ -5,7 +5,7 @@ RewriteRule ^(?:vibelink_private|admin|\.git)(?:/|$) - [F,L,NC]
 RewriteCond %{HTTP_HOST} ^admin[.-] [NC]
 RewriteCond %{REQUEST_URI} !^/_cms/
 RewriteRule ^ index.php [L]
-RewriteRule ^(?:index\.html|404\.html|robots\.txt|sitemap\.xml)$ index.php [L]
+RewriteRule ^(?:.*\.html|robots\.txt|sitemap\.xml)$ index.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
 <FilesMatch "(^\.|\.(?:sql|log|bak|ini|env|json|lock)$)">
