@@ -1,0 +1,16 @@
+vibelink_private/config.php
+vibelink_private/secret.key
+vibelink_private/installed.lock
+vibelink_private/*.mutex
+vibelink_private/sessions/
+vibelink_private/uploads/
+vibelink_private/trash/
+vibelink_private/backups/
+vibelink_private/tmp/
+public_html/link/*
+!public_html/link/.htaccess
+public_html/page-files/*
+!public_html/page-files/.htaccess
+tests/local-state.json
+tests/runtime/
+__pycache__/
